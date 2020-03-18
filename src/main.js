@@ -6,9 +6,13 @@ import Article from './components/Article.vue'
 import Tag from './components/Tag.vue'
 import Link from './components/Link.vue'
 import About from './components/About.vue'
-import NProgress from 'nprogress' //
+import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import VueResource from 'vue-resource'
+
+//设置title
+import VueWechatTitle from 'vue-wechat-title'
+Vue.use(VueWechatTitle);
 Vue.use(VueResource);
 Vue.config.productionTip = false
 Vue.use(VueRouter)
@@ -32,10 +36,14 @@ NProgress.configure({
   minimum: 0.3 // 初始化时的最小百分比
 });
  //当路由进入前
- router.beforeEach((to, from , next) => {
+router.beforeEach((to, from , next) => {
   // 每次切换页面时，调用进度条
- NProgress.start();
- // 这个一定要加，没有next()页面不会跳转的。这部分还不清楚的去翻一下官网就明白了
+  NProgress.start();
+  //路由发生变化修改页面title
+  if(to.meta.title){
+    document.title = to.meta.title
+  }
+  // 这个一定要加，没有next()页面不会跳转的。这部分还不清楚的去翻一下官网就明白了
   next();
 });
 //当路由进入后：关闭进度条

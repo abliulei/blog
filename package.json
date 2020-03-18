@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "axios": "^0.19.0",
     "core-js": "^2.6.5",
     "iview": "^3.4.2",
     "leancloud-realtime": "^4.3.1",
@@ -16,7 +17,8 @@
     "nprogress": "^0.2.0",
     "vue": "^2.6.10",
     "vue-resource": "^1.5.1",
-    "vue-router": "^3.0.7"
+    "vue-router": "^3.0.7",
+    "vue-wechat-title": "^2.0.5"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.8.0",
