@@ -12,8 +12,6 @@
         <span>{{ item.time }}</span>
         <router-link :to="'/article/'+item.id" >{{ item.title }}</router-link>
       </div>
-      {{pageData}}
-      <!-- <Page v-if="count" :msg="'count='+this.count+'&nowpage='+this.nowPage" @changePage="updateNowpage" /> -->
       <Page v-if="pageData[0]['count']" v-bind:pdata="pageData" @changePage="updateNowpage" />
     </main>
   </div>
@@ -41,7 +39,7 @@ export default {
     this.get();
   },
   methods: {
-    get: function(){
+    get: function(page){
       this.$http.get('https://a.abliulei.com/api/getarticlelist').then(
         function(res){
           this.article = res.data.data;
@@ -50,18 +48,20 @@ export default {
           let app = document.getElementById("app")
           let num = 5
           let myTimer = null;
-          myTimer = setInterval(function () {
-            app.style.marginTop = num+'vh'
-            //如果scroll的滚动值为0，也就是到达了页面顶部，需要停止定时器
-            num++;
-            if(num==20){
-                clearInterval(myTimer)
-            }
-          },30)
+          if(!page){
+            myTimer = setInterval(function () {
+              app.style.marginTop = num+'vh'
+              //如果scroll的滚动值为0，也就是到达了页面顶部，需要停止定时器
+              num++;
+              if(num==20){
+                  clearInterval(myTimer)
+              }
+            },30)
+          }
       },function(){
           this.error = '服务器无响应，即将刷新页面...';
-          let timer = setTimeout(function(){
-            location.reload()
+          setTimeout(function(){
+            this.get();
           },2000);
       })
     },
@@ -70,8 +70,7 @@ export default {
     }, 
     updateNowpage(type) { // type是子组件$emit传递的参数
       this.pageData[0]['nowPage'] = type
-      console.log(this.pageData)
-      this.get()
+      this.get(true)
     }
   },
   components: {

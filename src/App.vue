@@ -18,11 +18,11 @@
       <div class="notice" v-if="notice">
         <div class="notice-info">
           <i class="layui-icon">&#xe645;</i>
-          <span>
-            {{ noticeInfo }}
-          </span>
+          <span v-html="noticeInfo"></span>
         </div>
-        <div class="notice-close"><i class="layui-icon" @click="closeNotice()">&#x1006;</i></div>
+        <div class="notice-close">
+          <i class="layui-icon" @click="closeNotice()">&#x1006;</i>
+        </div>
       </div>
     </transition>
   </div>
@@ -39,7 +39,7 @@ export default {
     return{
       top: false
       ,notice: false
-      ,noticeInfo: '保持当前页面，直接在页面输入search即可显示搜索框'
+      ,noticeInfo: ''
     }
   },
   components: {
@@ -49,15 +49,16 @@ export default {
   mounted: function() { //钩子函数
     this.pv()
     this.appload()
-    this.box = this.$refs.searchBar
+    // this.box = this.$refs.searchBar
     // 监听这个dom的scroll事件
-    window.addEventListener('scroll', this.returnTopShow)
+    document.addEventListener('scroll', this.returnTopShow)
     this.getNotice()
+    setTimeout(this.closeNotice,60000);
   },
   methods: {
     returnTopShow: function(){
       let scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
-        
+      // console.log(scrollTop)
       if(scrollTop>200){
         this.top = true;
       }else{
@@ -100,7 +101,7 @@ export default {
         function(res){
           if(res.data.code==200){
             this.notice = true
-            this.noticeInfo = res.data.data
+            this.noticeInfo = res.data.data+"<p class='noticeTips'>一分钟后自动关闭</p>"
           }
         })
     }
@@ -164,18 +165,18 @@ a:hover{
 /* 设置滚动条的样式 */
 ::-webkit-scrollbar {
   width:10px;
-  background-color: #f0f0f0;
+  background-color: #ffffff;
 }
 
 /* 滚动槽 */
 ::-webkit-scrollbar-track {
-  border-radius: 2px;
+  border-radius: 1px;
 }
 
 /* 滚动条滑块 */
 ::-webkit-scrollbar-thumb {
   border-radius:10px;
-  background:#999;
+  background:#f0f0f0;
 }
 .fade-enter {
   opacity: 0;
@@ -265,5 +266,9 @@ a:hover{
 }
 .notice-enter-active,.notice-leave-active{
   transition: all 0.8s;
+}
+.noticeTips{
+  color: #666;
+  margin-top: 3px;
 }
 </style>

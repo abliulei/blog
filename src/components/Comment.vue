@@ -160,8 +160,8 @@ export default {
           }
         },function(){
           this.error = '服务器无响应，即将刷新页面...';
-          let timer = setTimeout(function(){
-            location.reload()
+          setTimeout(function(){
+            this.get();
           },2000);
         })
     },
@@ -205,7 +205,7 @@ export default {
               storage.setItem("email",input.email.value);
               storage.setItem("url",input.url.value);
               layer.close(loading);
-              if(res.body.code==200){
+              if(res.data.code==200){
                 layer.msg("评论成功！")
               }else{
                 layer.msg("评论失败！")

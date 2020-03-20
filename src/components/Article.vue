@@ -50,8 +50,8 @@ export default {
           },30)
       },function(){
           this.error = '服务器无响应，即将刷新页面...';
-          let timer = setTimeout(function(){
-            location.reload()
+          setTimeout(function(){
+            this.get();
           },2000);
       })
     },
