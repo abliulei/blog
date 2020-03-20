@@ -10,8 +10,19 @@
     <router-view></router-view>
     <Footer/>
     <transition name="fade">
-      <div class="return_top" v-if="top" @click="returnTop()" @mouseover="over($event)" @mouseout="out($event)">
+      <div class="return-top" v-if="top" @click="returnTop()" @mouseover="over($event)" @mouseout="out($event)">
         <i class="layui-icon">&#xe619;</i>   
+      </div>
+    </transition>
+    <transition name="notice">
+      <div class="notice" v-if="notice">
+        <div class="notice-info">
+          <i class="layui-icon">&#xe645;</i>
+          <span>
+            {{ noticeInfo }}
+          </span>
+        </div>
+        <div class="notice-close"><i class="layui-icon" @click="closeNotice()">&#x1006;</i></div>
       </div>
     </transition>
   </div>
@@ -21,11 +32,14 @@
 import Header from './components/Header.vue'
 import Footer from './components/Footer.vue'
 import click from './assets/click.js'
+import search from './assets/search.js'
 export default {
   name: 'app',
   data(){
     return{
-      top:false
+      top: false
+      ,notice: false
+      ,noticeInfo: '保持当前页面，直接在页面输入search即可显示搜索框'
     }
   },
   components: {
@@ -36,9 +50,9 @@ export default {
     this.pv()
     this.appload()
     this.box = this.$refs.searchBar
-      // console.log(this.box.offsetHeight)
     // 监听这个dom的scroll事件
     window.addEventListener('scroll', this.returnTopShow)
+    this.getNotice()
   },
   methods: {
     returnTopShow: function(){
@@ -77,6 +91,18 @@ export default {
     }
     ,out: function(){
       // console.log(event)
+    }
+    ,closeNotice: function(){
+      this.notice = false
+    }
+    ,getNotice: function(){
+      this.$http.get('https://a.abliulei.com/api/getnotice').then(
+        function(res){
+          if(res.data.code==200){
+            this.notice = true
+            this.noticeInfo = res.data.data
+          }
+        })
     }
   }
   ,compiled: function(){
@@ -163,17 +189,17 @@ a:hover{
 .fade-leave-active {
   transition: opacity 2s;
 }
-.return_top{
+.return-top{
   width: 30px;
   height: 30px;
   position: fixed;
   right: calc( 50vw - 380px );
   bottom: 15vh;
 }
-.return_top :hover{
+.return-top :hover{
   cursor: url('./assets/hand.png'),auto !important;
 }
-.return_top i{
+.return-top i{
   font-size: 30px; 
   color: #222;
 }
@@ -198,5 +224,46 @@ a:hover{
     100% {
         transform: translateY(-50px);    
     }
+}
+/**
+  公告样式
+*/
+.notice{
+  position: fixed;
+  /* bottom: 5vh; */
+  top: 1vh;
+  background-color: rgba(0,0,0,0.15);
+  width: 984px;
+  padding: 10px 15px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+}
+.notice .notice-info{
+	word-break: break-all; 
+	word-wrap: break-word;
+  overflow: hidden;
+  display: flex;
+}
+.notice .notice-info i{
+  margin-right: 2px;
+  font-weight: 500;
+  font-size: 18px;
+}
+.notice .notice-info span{
+  margin-left: 0;
+}
+.notice .notice-close i{
+  font-weight: 500;
+  cursor: url('./assets/hand.png'),auto !important;
+}    
+.notice-enter,.notice-leave-to{
+  opacity: 0;
+}
+.notice-enter-to,.notice-leave{
+  opacity: 1;
+}
+.notice-enter-active,.notice-leave-active{
+  transition: all 0.8s;
 }
 </style>

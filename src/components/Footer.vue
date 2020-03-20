@@ -34,7 +34,7 @@ export default {
   /* border-top: 1px solid #ddd; */
   /* width: 800px; */
   /* text-align: right; */
-  margin-top: 8px;
+  margin-top: 15px;
   /* padding-top: 10px; */
   display: flex;
   flex-wrap: wrap;

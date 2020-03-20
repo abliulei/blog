@@ -12,13 +12,18 @@
           <textarea name="content" id="" cols="30" rows="10" placeholder="只接受好评。" ></textarea>
         </div>
         <div class="comment_submit">
-          <a href="https://abliulei.com/markdown" target="_blank" class="zhichi_md">
-            <svg t="1576509244954" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1715" width="28" height="28"><path d="M895.318 192 128.682 192C93.008 192 64 220.968 64 256.616l0 510.698C64 802.986 93.008 832 128.682 832l766.636 0C930.992 832 960 802.986 960 767.312L960 256.616C960 220.968 930.992 192 895.318 192zM568.046 704l-112.096 0 0-192-84.08 107.756L287.826 512l0 192L175.738 704 175.738 320l112.088 0 84.044 135.96 84.08-135.96 112.096 0L568.046 704 568.046 704zM735.36 704l-139.27-192 84 0 0-192 112.086 0 0 192 84.054 0-140.906 192L735.36 704z" p-id="1716" fill="#333333"></path></svg>
-          </a>
+          <div>
+            <a href="https://abliulei.com/markdown" target="_blank" class="zhichi_md">
+              <svg t="1576509244954" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1715" width="28" height="28"><path d="M895.318 192 128.682 192C93.008 192 64 220.968 64 256.616l0 510.698C64 802.986 93.008 832 128.682 832l766.636 0C930.992 832 960 802.986 960 767.312L960 256.616C960 220.968 930.992 192 895.318 192zM568.046 704l-112.096 0 0-192-84.08 107.756L287.826 512l0 192L175.738 704 175.738 320l112.088 0 84.044 135.96 84.08-135.96 112.096 0L568.046 704 568.046 704zM735.36 704l-139.27-192 84 0 0-192 112.086 0 0 192 84.054 0-140.906 192L735.36 704z" p-id="1716" fill="#333333"></path></svg>
+            </a>
+            
+          </div>
           <button @click="submit();">提交</button>
         </div>
     </div>
     <div class="error" v-if="this.error">{{ error }} <i class="layui-icon layui-icon-loading layui-anim layui-anim-rotate layui-anim-loop"></i></div>
+    <div class="tips" v-if="this.tips">{{ tips }}</div>
+    <div class="count" v-if="this.count">当前共<font>{{ count }}</font>条评论</div>
     <!-- </form> -->
     <div class="comment_list" id="llmd">
       <div class="clist_u" v-for="item in comments" :key='item.id'>
@@ -62,9 +67,11 @@ export default {
   data(){
     return{
       error: '评论加载中',
+      tips: '',
+      count: '',
       comments: [],
-      type:'',
-      id:''
+      type: '',
+      id: ''
     }
   },
   props: {
@@ -143,9 +150,14 @@ export default {
       }
       this.$http.get('https://a.abliulei.com/api/getcomment?'+param).then(
         function(res){
-          // console.log(res.data.data)
+          // console.log(res.data.data.length)
           this.comments = res.data.data
           this.error = ''
+          if(res.data.data.length==0){
+            this.tips = '沙发还空着呢，快来评论鸭~'
+          }else{
+            this.count = res.data.data.length
+          }
         },function(){
           this.error = '服务器无响应，即将刷新页面...';
           let timer = setTimeout(function(){
@@ -213,9 +225,14 @@ export default {
   @import '../assets/markdown.css';
 </style>
 <style scoped>
-.error{
+.error,.tips,.count{
   color: #666;
-  margin-top: 8px;
+  margin-top: 10px;
+}
+.count font{
+  margin: 0px 3px;
+  font-size: 18px;
+  font-weight: 600;
 }
 .comment{
   width: 100%;

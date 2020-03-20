@@ -66,8 +66,7 @@ export default {
 <style scoped>
 
 .tag{
-  width: 100%;
-  /* min-height: calc( 100vh - 238px ); */
+  width: 720px;
 }
 .h1,.h2,.h3,.h4,.h5{
   display: inline-block;
