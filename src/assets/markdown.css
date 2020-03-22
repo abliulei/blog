@@ -12,6 +12,15 @@
   font-size: 16px;
   word-wrap: break-word;
 }
+#llmd .emoji-icon{
+  width: 22px;
+  height: 22px;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
+  font-size: 20px;
+  cursor: url('../assets/hand.png'),auto !important;
+}
 #llmd del{
   text-decoration: line-through;
 }
@@ -240,7 +249,7 @@
 #llmd table,
 #llmd pre {
   margin-top: 0;
-  margin-bottom: 16px;
+  margin-bottom: 10px;
 }
 
 #llmd hr {

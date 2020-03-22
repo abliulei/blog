@@ -9,16 +9,17 @@
           <input type="text" name="url" @focus="input_focus($event)" @blur="input_blur($event)" placeholder="地址(https://)">
         </div>
         <div class="comment_edit">
-          <textarea name="content" id="" cols="30" rows="10" placeholder="只接受好评。" ></textarea>
+          <textarea name="content" id="comment-info" cols="30" rows="10" placeholder="只接受好评。"></textarea>
         </div>
         <div class="comment_submit">
-          <div>
+          <div class="comment_control">
             <a href="https://abliulei.com/markdown" target="_blank" class="zhichi_md">
               <svg t="1576509244954" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1715" width="28" height="28"><path d="M895.318 192 128.682 192C93.008 192 64 220.968 64 256.616l0 510.698C64 802.986 93.008 832 128.682 832l766.636 0C930.992 832 960 802.986 960 767.312L960 256.616C960 220.968 930.992 192 895.318 192zM568.046 704l-112.096 0 0-192-84.08 107.756L287.826 512l0 192L175.738 704 175.738 320l112.088 0 84.044 135.96 84.08-135.96 112.096 0L568.046 704 568.046 704zM735.36 704l-139.27-192 84 0 0-192 112.086 0 0 192 84.054 0-140.906 192L735.36 704z" p-id="1716" fill="#333333"></path></svg>
             </a>
-            
+            <i class="layui-icon" @click="showEmoji()">&#xe650;</i>
           </div>
           <button @click="submit();">提交</button>
+          <Emoji v-if="isEmoji" @changeEmoji="addEmoji" />
         </div>
     </div>
     <div class="error" v-if="this.error">{{ error }} <i class="layui-icon layui-icon-loading layui-anim layui-anim-rotate layui-anim-loop"></i></div>
@@ -63,6 +64,8 @@
 </template>
 
 <script>
+import '../assets/emoji.js';
+import Emoji from './Emoji.vue'
 export default {
   data(){
     return{
@@ -71,7 +74,9 @@ export default {
       count: '',
       comments: [],
       type: '',
-      id: ''
+      id: '',
+      isEmoji: false,
+      eee: '<svg class="emoji-icon" aria-hidden="true" title="开心"><use xlink:href="#icon-kaixin"></use></svg>'
     }
   },
   props: {
@@ -215,8 +220,19 @@ export default {
               return false;
             }
         )
+    },
+    showEmoji: function(){
+      this.isEmoji = !this.isEmoji
+    },
+    addEmoji: function(code){
+      let info = document.getElementById("comment-info")
+      document.getElementById("comment-info").value = info.value+'&#'+code+'&#'
+      info.focus();
     }
   },
+  components: {
+    Emoji    // 第二步：局部注册组件
+  }
 }
 </script>
 
@@ -225,6 +241,16 @@ export default {
   @import '../assets/markdown.css';
 </style>
 <style scoped>
+.emoji-icon{
+  width: 25px;
+  height: 25px;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
+  font-size: 20px;
+  margin: 10px;
+  cursor: url('../assets/hand.png'),auto !important;
+}
 .error,.tips,.count{
   color: #666;
   margin-top: 10px;
@@ -292,14 +318,24 @@ textarea::-moz-placeholder{
 .comment .comment_content .comment_submit{
   display: flex;
   justify-content: space-between;
+  position: relative;
   /* text-align: right; */
 }
-.zhichi_md{
-  margin-top: 8px;
+.comment .comment_content .comment_submit .comment_control{
+  display: flex;
+}
+.comment .comment_content .comment_submit .comment_control i{
+  margin: 8px 0px 0px 5px;
+  font-weight: 600;
+  font-size: 18px;
+  cursor: url('../assets/hand.png'),auto !important;
+}
+.comment .comment_content .comment_submit .comment_control .zhichi_md{
+  margin-top: 3px;
   width: 28px;
   height: 28px;
 }
-.zhichi_md :hover{
+.comment .comment_content .comment_submit .comment_control .zhichi_md :hover{
   cursor: url('../assets/hand.png'),auto !important;
 }
 .comment .comment_content .comment_submit button{
