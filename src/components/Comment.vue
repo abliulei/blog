@@ -128,6 +128,8 @@ export default {
       let textarea = document.getElementsByTagName("textarea")[0]
       textarea.placeholder = "@"+name
       event.target.style.display = "block"
+      let info = document.getElementById("comment-info")
+      info.focus();
     },
     replay_son: function(id,name){
       let input = document.getElementsByTagName("input")
@@ -136,6 +138,8 @@ export default {
       let textarea = document.getElementsByTagName("textarea")[0]
       textarea.placeholder = "@"+name
       event.target.style.display = "block"
+      let info = document.getElementById("comment-info")
+      info.focus();
     },
     comment: function(data,id){
       let storage = window.localStorage;
