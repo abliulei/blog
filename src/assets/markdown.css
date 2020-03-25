@@ -294,8 +294,8 @@
 #llmd h4,
 #llmd h5,
 #llmd h6 {
-  margin-top: 24px;
-  margin-bottom: 16px;
+  /* margin-top: 24px; */
+  /* margin-bottom: 16px; */
   font-weight: 500;
   line-height: 1.25;
 }
@@ -303,13 +303,13 @@
 #llmd h1 {
   padding-bottom: 0.3em;
   font-size: 1.45em;
-  border-bottom: 1px solid #eaecef;
+  /* border-bottom: 1px solid #eaecef; */
 }
 
 #llmd h2 {
   padding-bottom: 0.3em;
   font-size: 1.35em;
-  border-bottom: 1px solid #eaecef;
+  /* border-bottom: 1px solid #eaecef; */
 }
 
 #llmd h3 {

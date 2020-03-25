@@ -91,7 +91,7 @@ export default {
 <style scoped>
 .emoji{
   position: absolute;
-  left: 60px;
+  left: 80px;
   top: 8px;
   width: 225px;
   height: auto;
