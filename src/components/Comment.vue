@@ -30,7 +30,7 @@
       <div class="clist_u" v-for="item in comments" :key='item.id'>
         <img class="cuimg" :src="item.avatar">
         <div class="curight" @mouseover="replay_mouseover($event)" @mouseout="replay_mouseout($event)">
-          <a :href="item.url" class="cuname" target="_blank">{{ item.username }}</a>
+          <a :href="item.url" class="cuname" :id="'comment_jump'+item.id" target="_blank">{{ item.username }}</a>
           <div class="cuinfo">
             <div class="cudate">
               <span>{{ item.addtime }}</span>
@@ -42,7 +42,7 @@
                 <div v-for="son in item.son" :key="son.id" class="clist_u">
                   <img class="cuimg" :src="son.avatar">
                   <div class="curight_sm">
-                    <a :href="son.url" target="_blank" class="cuname">{{ son.username }}</a>
+                    <a :href="son.url" target="_blank" class="cuname" :id="'comment_jump'+son.id">{{ son.username }}</a>
                     <div class="cuinfo">
                       <div class="cudate">
                         <span>{{ son.addtime }}</span>
@@ -133,7 +133,7 @@ export default {
       textarea.placeholder = "@"+name
       event.target.style.display = "block"
     },
-    comment: function(data){
+    comment: function(data,id){
       let storage = window.localStorage;
       let input = document.getElementsByTagName("input")
       let username = storage.getItem("username");
@@ -155,8 +155,13 @@ export default {
       }
       this.$http.get('https://a.abliulei.com/api/getcomment?'+param).then(
         function(res){
-          // console.log(res.data.data.length)
+          // console.log(res.data.data)
           this.comments = res.data.data
+          setTimeout(() => {
+            if(id){
+              this.comment_jump(id)
+            }
+          }, 500);
           this.error = ''
           if(res.data.data.length==0){
             this.tips = '沙发还空着呢，快来评论鸭~'
@@ -172,6 +177,7 @@ export default {
     },
     submit: function(){
         let input = document.getElementsByTagName("input")
+        let _this = this
         if(Object.keys(input.username.value).length === 0){
           layer.msg("请输入昵称~");
           return false;
@@ -203,7 +209,7 @@ export default {
         // console.log(data)
         // let datas = JSON.stringify(data)
         let loading = layer.load(1,{shade:0.5,time:0});
-        this.$http.post('https://a.abliulei.com/api/sendComment',{'username':input.username.value,'email':input.email.value,'url':input.url.value,'content':textarea.content.value,'type':this.type,'article_id':this.id,'comment_id':input.comment_id.value,'father_username':input.father_username.value},{emulateJSON:true}).then(
+        _this.$http.post('https://a.abliulei.com/api/sendComment',{'username':input.username.value,'email':input.email.value,'url':input.url.value,'content':textarea.content.value,'type':_this.type,'article_id':_this.id,'comment_id':input.comment_id.value,'father_username':input.father_username.value},{emulateJSON:true}).then(
             function(res){
               let storage = window.localStorage;
               storage.setItem("username",input.username.value);
@@ -212,12 +218,12 @@ export default {
               layer.close(loading);
               if(res.data.code==200){
                 layer.msg("评论成功！")
+                textarea.content.value = ''
+                _this.comment(_this.msg,res.data.data);
+                return false;
               }else{
                 layer.msg("评论失败！")
               }
-              textarea.content.value = ''
-              this.comment(this.msg);
-              return false;
             }
         )
     },
@@ -228,6 +234,14 @@ export default {
       let info = document.getElementById("comment-info")
       document.getElementById("comment-info").value = info.value+'&#'+code+'&#'
       info.focus();
+    },
+    /**
+     * 跳转到指定id的评论
+     * id评论id
+    */
+    comment_jump: function(id){
+      let selector = "comment_jump"+id
+      document.documentElement.scrollTop = document.getElementById(selector).offsetTop - 20
     }
   },
   components: {
